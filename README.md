@@ -25,7 +25,8 @@ HexViewer is intended to be used as a UI element inside a WPF application.
 
 ```xml
 <local:HexViewer Data="{Binding RawData, Mode=OneWay}" PreviewMouseWheel="HexVisualViewer_PreviewMouseWheel"
-                 Visibility="{Binding RawData, Converter={StaticResource CollectionCountToVisibilityConverter}}" IsLoadFromBinVisible="False" />
+                 Visibility="{Binding RawData, Converter={StaticResource CollectionCountToVisibilityConverter}}"
+                 IsLoadFromBinVisible="False" />
 
 ```csharp
 ### Converter example
