@@ -24,12 +24,29 @@ HexViewer is intended to be used as a UI element inside a WPF application.
 ### XAML example
 
 ```xml
-<local:HexViewer
-    Data="{Binding RawData, Mode=OneWay}"
-    PreviewMouseWheel="HexVisualViewer_PreviewMouseWheel"
-    Visibility="{Binding RawData, Converter={StaticResource CollectionCountToVisibilityConverter}}"
-    IsLoadFromBinVisible="False" />
+<local:HexViewer Data="{Binding RawData, Mode=OneWay}" PreviewMouseWheel="HexVisualViewer_PreviewMouseWheel"
+                 Visibility="{Binding RawData, Converter={StaticResource CollectionCountToVisibilityConverter}}" IsLoadFromBinVisible="False" />
 
+```c#
+### Converter example
+     public class CollectionCountToVisibilityConverter : IValueConverter
+     {
+         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+         {
+             if (value is ICollection collection)
+                 return collection.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+
+             return Visibility.Collapsed;
+         }
+
+         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+         {
+             throw new NotImplementedException();
+         }
+     }
+
+```c#
+### PreviewMouseWheel example
  PreviewMouseWheel="HexVisualViewer_PreviewMouseWheel":
       private void HexVisualViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
       {
