@@ -1,0 +1,87 @@
+<Window x:Class="HexViewer.HexEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:editor="clr-namespace:HexViewer.Control.HexEditor"
+        Title="HEX редактор" Height="720" Width="1200" MinHeight="420" MinWidth="760"
+        WindowStartupLocation="CenterOwner" FontSize="15">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="Save" Executed="SaveCommand_Executed"/>
+        <CommandBinding Command="Find" Executed="FindCommand_Executed"/>
+        <CommandBinding Command="NavigationCommands.GoToPage" Executed="GoToCommand_Executed"/>
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Command="Save" Key="S" Modifiers="Control"/>
+        <KeyBinding Command="Find" Key="F" Modifiers="Control"/>
+        <KeyBinding Command="NavigationCommands.GoToPage" Key="G" Modifiers="Control"/>
+    </Window.InputBindings>
+
+    <DockPanel>
+        <Border DockPanel.Dock="Top" MinHeight="38" Padding="8 5 8 1" Background="#F7F7F7"
+                BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" BorderThickness="0 0 0 1">
+            <WrapPanel VerticalAlignment="Center">
+                <Button x:Name="SaveButton" Content="Сохранить" Click="Save_Click" Padding="10 0" Margin="0 0 20 4"/>
+
+                <StackPanel Orientation="Horizontal" Margin="0 0 20 4">
+                    <TextBlock Text="Адрес:" FontSize="15" VerticalAlignment="Center" Margin="0 0 6 0"/>
+                    <TextBox x:Name="AddressBox" Width="110"
+                             ToolTip="HEX адрес, например 1A0 или 0x1A0" Margin="0 0 6 0"/>
+                    <Button Content="Перейти" Click="GoToAddress_Click" Padding="10 0"/>
+                </StackPanel>
+
+                <Button Content="Поиск" Click="OpenSearch_Click"
+                        ToolTip="Открыть окно поиска (Ctrl+F)" Padding="10 0" Margin="0 0 20 4"/>
+
+                <StackPanel Orientation="Horizontal" Margin="0 0 20 4">
+                    <TextBlock Text="Колонки:" FontSize="15" VerticalAlignment="Center" Margin="0 0 6 0"/>
+                    <ComboBox x:Name="ColumnsBox" Width="70"
+                              SelectionChanged="ColumnsBox_SelectionChanged" SelectedIndex="3">
+                        <ComboBoxItem Content="8"/>
+                        <ComboBoxItem Content="16"/>
+                        <ComboBoxItem Content="24"/>
+                        <ComboBoxItem Content="32"/>
+                        <ComboBoxItem Content="48"/>
+                        <ComboBoxItem Content="64"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <CheckBox x:Name="ShowAsciiCheckBox" Content="Показывать ASCII"
+                          IsChecked="{Binding ShowAscii, ElementName=Editor, Mode=TwoWay}" VerticalAlignment="Center"
+                          Margin="0 0 20 4"/>
+
+                <StackPanel Orientation="Horizontal" Margin="0 0 0 4">
+                    <TextBlock Text="Кодировка:" FontSize="15" VerticalAlignment="Center" Margin="0 0 6 0"/>
+                    <ComboBox x:Name="TextEncodingBox" Width="130"
+                              SelectedIndex="0" SelectionChanged="TextEncodingBox_SelectionChanged"
+                              IsEnabled="{Binding IsChecked, ElementName=ShowAsciiCheckBox}">
+                        <ComboBoxItem Content="ASCII" Tag="Ascii"/>
+                        <ComboBoxItem Content="UTF-8" Tag="Utf8"/>
+                        <ComboBoxItem Content="Windows-1251" Tag="Windows1251"/>
+                    </ComboBox>
+                </StackPanel>
+            </WrapPanel>
+        </Border>
+
+        <WrapPanel DockPanel.Dock="Top" Margin="8 0 8 4">
+            <TextBlock x:Name="FileStatusText" FontSize="15" Margin="0 0 12 0"/>
+            <TextBlock x:Name="CaretStatusText" FontSize="15" Margin="0 0 12 0"/>
+            <TextBlock x:Name="SelectionStatusText" FontSize="15" Margin="0 0 12 0"/>
+            <TextBlock x:Name="ModifiedStatusText" FontSize="15"/>
+        </WrapPanel>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <ScrollViewer Grid.Column="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                <editor:HexEditor x:Name="Editor" Margin="0" Columns="32" GroupSize="4"
+                                  GroupGapChars="1.1" CompactShortData="True" ShowAscii="True"/>
+            </ScrollViewer>
+
+            <ScrollBar x:Name="VerticalScrollBar" Grid.Column="1" Orientation="Vertical" SmallChange="1" Margin="0 4 4 4"/>
+        </Grid>
+    </DockPanel>
+</Window>
